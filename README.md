@@ -1,2 +1,2 @@
 # hotel-App-management
-This is a project on hotel, room, registration and reservation history
+This is a project on hotel, room management, registration, and reservation history
