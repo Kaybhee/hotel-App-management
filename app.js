@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import MONGODB_URI from './config/const.js';
+import hotelRoutes from './routes/hotelRoutes.js'
 const PORT = 5000
 
 const app = express()
-app.use(express.json())
+
 export const connectDB = async() => {
     try {
         const conn = await mongoose.connect(MONGODB_URI);
@@ -15,7 +16,13 @@ export const connectDB = async() => {
     }
 }
 
+// middlewares
+app.use(express.json())
+app.use(morgan('dev'))
+// routes 
+app.use('api/v1/hotels', hotelRoutes)
 
+// Connect to mongoDB
 app.listen(PORT || MONGODB_URI, () => {
     console.log(`Server is running at http://localhost:${PORT}`)
 })
