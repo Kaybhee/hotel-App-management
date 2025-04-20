@@ -1,26 +1,19 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import MONGODB_URI from './config/const.js';
+import express from 'express'
+import { connectDB } from './config/db.js';
 import hotelRoutes from './routes/hotelRoutes.js'
+import morgan from 'morgan'
 const PORT = 5000
 
+// Connect to database
+connectDB()
+
+// express application
 const app = express()
-
-export const connectDB = async() => {
-    try {
-        const conn = await mongoose.connect(MONGODB_URI);
-    console.log(`MONGODB CONNECTED: ${conn.connection.host}`)
-    } catch (e) {
-        console.error(`Error: ${e.message}`)
-        Promise.exit(1)
-    }
-}
-
 // middlewares
 app.use(express.json())
 app.use(morgan('dev'))
 // routes 
-app.use('api/v1/hotels', hotelRoutes)
+app.use('/api/v1/hotels', hotelRoutes)
 
 // Connect to mongoDB
 app.listen(PORT || MONGODB_URI, () => {
