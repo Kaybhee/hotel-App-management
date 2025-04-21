@@ -2,10 +2,14 @@ import mongoose from 'mongoose'
 
 
 const hotelSchema = mongoose.Schema({
-    name: {
-    type: String,
-    required: true,
-    },
+    // firstname: {
+    // type: String,
+    // required: true,
+    // },
+    // lastName: {
+    //     type: String,
+    //     required: true,
+    //     },
     hotelType: {
         type: String,
         required: true,
@@ -30,6 +34,10 @@ const hotelSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    title: {
+        type: String,
+        required: true,
+    },
     ratings: {
         type: String,
         min: 0,
@@ -37,15 +45,15 @@ const hotelSchema = mongoose.Schema({
     },
     rooms: {
         type: [String],
-        required: true,
+    },
+    available: {
+        type: Boolean,
+        default: true
     },
     cheapestRooms: {
         type: Number,
         required: true,
     }
-
-
-
 })
 
 
