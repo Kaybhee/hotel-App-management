@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
 // import { JWT_SECRET } from '../const.js';
-import {JWT_SECRET} from '../const.js';
+import {JWT_SECRET} from '../const.js'
 
 
 export const register = async(req, res, next) => {
@@ -13,6 +13,7 @@ export const register = async(req, res, next) => {
             // return res.status(400).json({ message: "Please fill in all fields" });
             return next(errorHandler(400, "Please fill in all fields"));
         }
+        console.log(password)
         const existingUser = await User.findOne({email});
         if (existingUser) {
             // return res.status(400).json({message: "Email already exists"});
@@ -20,16 +21,25 @@ export const register = async(req, res, next) => {
         }
         if (password.length < 8) {
             return next(errorHandler(400, "Password must be at least 8 characters"))
-        }
-
-        const user = await User.create({
-            userName,
-            email,
-            password
-        })
-
-        console.log(user)
-        res.status(200).json({message: 'User created successfully', user})
+        } 
+        // else {
+        //     const encryptPass = async(password) => {
+        //         const salt = await bcrypt.genSalt(10);
+        //         return await bcrypt.hash(password, 10);
+        //     }
+            // const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, 10);
+            const user = await User.create({
+                    userName,
+                    email,
+                    password: hash
+                })
+                // console.log(user.password)
+                const { password: _,...pass} = user._doc
+                
+                // console.log(user._doc)
+                // console.log("user:",  pass)
+                res.status(200).json({message: 'User created successfully', pass})
 
     } catch (error) {
         // Check if there are validation errors e.g length of password, special keys or uppercase in password
@@ -44,15 +54,18 @@ export const register = async(req, res, next) => {
 }
 
 
-export const userLogin = async(req, res) => {
+export const userLogin = async(req, res, next) => {
     const { email, password } = req.body;
     try {
-        const userCred = await User.findOne({email});
+        const userCred = await User.findOne({email})
+        // if (!userCred) {
+        //     return next(errorHandler(400,"User not found"))
+        // }
         const isPassword = await bcrypt.compare(password, userCred.password);
-        if (!userCred) {
-            return next(errorHandler(400,"User not found"))
-        }
+        console.log("Plaintext Password:", password);
 
+        console.log("Hashed Password:", userCred.password);
+        console.log(JWT_SECRET)
         if (!isPassword) {
             return next(errorHandler(400, "Invalid Credentials")) 
         }
