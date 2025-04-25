@@ -1,12 +1,11 @@
 import express from 'express';
-import { createUser, createHotels, updateHotels, getHotels, getHotel, delHotels, getAvailableRooms, getRoom, getAllRooms, changePrices, changeStatus } from '../controller/user.js';
+import { createHotels, updateHotels, getHotels, getHotel, delHotels, getAvailableRooms, getRoom, getAllRooms, changePrices, changeStatus } from '../controller/hotel.js';
 
 // import
 
 const hotelRoutes = express.Router()
 
 
-hotelRoutes.post('/create-user', createUser)
 hotelRoutes.post('/create-hotels', createHotels)
 // get requests
 hotelRoutes.get('/rooms-available', getAvailableRooms)
