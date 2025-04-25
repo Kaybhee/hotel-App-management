@@ -1,6 +1,8 @@
 import express from 'express'
 import { connectDB } from './config/db.js';
 import hotelRoutes from './routes/hotelRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import errCheck from './middlewares/errors/error.js';
 import morgan from 'morgan'
 const PORT = 5000
 
@@ -14,7 +16,10 @@ app.use(express.json())
 app.use(morgan('dev'))
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
+app.use('/api/v1/auth', authRoutes)
 
+// Error middleware
+app.use(errCheck);
 // Connect to mongoDB
 app.listen(PORT || MONGODB_URI, () => {
     console.log(`Server is running at http://localhost:${PORT}`)
