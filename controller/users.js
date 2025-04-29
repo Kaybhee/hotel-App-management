@@ -6,7 +6,7 @@ export const updateUser = async(req, res, next) => {
     const { userId } = req.params
     // const upHotels = new Hotels(req.body)
     console.log("Request Params:", req.params); // Log the entire req.params object
-    console.log("User ID:", userId); // Log t
+    console.log("User ID:", userId);
     try {
         const findUser = await User.findById(userId)
         if (!findUser) {
@@ -15,7 +15,10 @@ export const updateUser = async(req, res, next) => {
         if (req.body.email) {
             return next(errorHandler(400, "User email cannot be updated"))
         }
-
+        if (req.body.password) {
+            const hashed = await bcrypt.hash(req.body.password, 10)
+            findUser.password = hashed
+        }
         findUser.userName = req.body.userName || findUser.userName
         findUser.password = req.body.password || findUser.password
         await findUser.save()
@@ -26,7 +29,7 @@ export const updateUser = async(req, res, next) => {
             data: upDatedUser
         })
     } catch (err) {
-        console.error({error: "Error", err}) //Log errors
+        console.error({error: "Error", err})
         return next(err)
     }
 }
