@@ -5,7 +5,6 @@ import Room from '../models/rooms.js'
 export const createHotels = async(req, res) => {
     const newHotel = new Hotels(req.body) 
     try {
-        const { hotelId } = req.params
         const existingHotel = await Hotels.findOne({hotelType: newHotel.hotelType})
         // const savedHotel = await newHotel.save()
         if (existingHotel) {
@@ -24,7 +23,6 @@ export const createHotels = async(req, res) => {
 
 export const updateHotels = async(req, res) => {
     const { hotelId } = req.params
-    const upHotels = new Hotels(req.body)
     console.log("Request Params:", req.params); // Log the entire req.params object
     console.log("Hotel ID:", hotelId); // Log t
     try {
@@ -47,7 +45,6 @@ export const updateHotels = async(req, res) => {
         findHotels.city = req.body.city || findHotels.city
         findHotels.address = req.body.address || findHotels.address
         findHotels.distance = req.body.distance || findHotels.distance
-        findHotels.address = req.body.address || findHotels.address
         findHotels.desc = req.body.desc || findHotels.desc
         findHotels.rooms = req.body.rooms || findHotels.rooms
         findHotels.ratings = req.body.ratings || findHotels.ratings
@@ -111,29 +108,13 @@ export const getHotelRooms = async(req, res, next) =>{
     // const 
     try {
         const hotel = await Hotels.findById(req.params.hotelId)
-        const list = await Promise.all(hotel.rooms.map((room) => {
+        const data = await Promise.all(hotel.rooms.map((room) => {
             return Room.findById(room)
         })
-    ); res.status(200).json({message: "Hotel rooms successfully retrieved", list})
+    ); res.status(200).json({message: "Hotel rooms successfully retrieved", data})
     } catch (err) {
         next(err)
     }
-}
-
-
-export const getRoom = async(req, res) => {
-
-}
-
-export const getAllRooms = async(req, res) => {
-
-}
-
-export const changePrices = async(req, res) => {
-
-}
-export const changeStatus = async(req, res) => {
-
 }
 
 
