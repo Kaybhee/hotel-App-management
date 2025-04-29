@@ -1,9 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import morgan from 'morgan'
-import {MONGODB_URI} from '../const.js';
-import hotelRoutes from '../routes/hotelRoutes.js';
-const PORT = 5000
+import { MONGODB_URI } from '../app.js';
 
 const app = express()
 
