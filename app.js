@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import roomRoutes from './routes/roomRoutes.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import { setupSwaggerDocs } from './swagger.js';
 dotenv.config()
 export const MONGODB_URI = process.env.MONGODB_URI
 export const JWT_SECRET = process.env.JWT_SECRET
@@ -27,15 +28,14 @@ app.use(morgan('dev'))
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
 app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1', userRoutes)
+app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/room', roomRoutes)
-// app.use('/api/v1/users', (req, res, next) => {
-//     console.log('Request reached /api/v1/users');
-//     next();
-//   }, userRoutes);
-// console.log('user routes loaded')
+
 // Error middleware
 app.use(errCheck);
+// swagger docs
+setupSwaggerDocs(app);
+
 // Connect to mongoDB
 app.listen(PORT || MONGODB_URI, () => {
     console.log(`Server is running at http://localhost:${PORT}`)
