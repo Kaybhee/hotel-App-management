@@ -1,8 +1,9 @@
 import Hotels from '../models/hotels.js'
+import Room from '../models/rooms.js'
 
 
 export const createHotels = async(req, res) => {
-    const newHotel = new Hotels(req.body)
+    const newHotel = new Hotels(req.body) 
     try {
         const { hotelId } = req.params
         const existingHotel = await Hotels.findOne({hotelType: newHotel.hotelType})
@@ -105,9 +106,20 @@ export const delHotels = async(req, res) => {
         return res.status(500).json({message: "Server Error"})
     }
 }
-export const getAvailableRooms = async(req, res) =>{
 
+export const getHotelRooms = async(req, res, next) =>{
+    // const 
+    try {
+        const hotel = await Hotels.findById(req.params.hotelId)
+        const list = await Promise.all(hotel.rooms.map((room) => {
+            return Room.findById(room)
+        })
+    ); res.status(200).json({message: "Hotel rooms successfully retrieved", list})
+    } catch (err) {
+        next(err)
+    }
 }
+
 
 export const getRoom = async(req, res) => {
 
