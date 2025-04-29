@@ -4,6 +4,7 @@ import hotelRoutes from './routes/hotelRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import errCheck from './middlewares/errors/error.js';
 import userRoutes from './routes/userRoutes.js';
+import roomRoutes from './routes/roomRoutes.js';
 import morgan from 'morgan'
 const PORT = 5000
 
@@ -18,7 +19,8 @@ app.use(morgan('dev'))
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
 app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1', userRoutes)
+app.use('/api/v1/room', roomRoutes)
 // app.use('/api/v1/users', (req, res, next) => {
 //     console.log('Request reached /api/v1/users');
 //     next();
