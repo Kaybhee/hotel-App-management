@@ -10,7 +10,6 @@ export const register = async(req, res, next) => {
         if (!userName || !email || !password) {
             return next(errorHandler(400, "Please fill in all fields"));
         }
-        console.log(password)
         const existingUser = await User.findOne({email});
         if (existingUser) {
             return next(errorHandler(400, "Email already exists"));
@@ -64,7 +63,6 @@ export const userLogin = async(req, res, next) => {
         if (!genToken) {
             return next(errorHandler(400, "Token not generated")) 
         }
-        // const { password: _, ...userLog } = user._doc
         return res.status(200).json({message: "User logged in successfully", token: `Bearer ${genToken}`})
     } catch (error) {
         console.error(error)
