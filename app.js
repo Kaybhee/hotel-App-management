@@ -18,6 +18,9 @@ connectDB()
 
 // express application
 const app = express()
+app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
 // middlewares
 app.use(express.json())
 app.use(morgan('dev'))
