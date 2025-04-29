@@ -1,4 +1,4 @@
-import { JWT_SECRET, ADMIN_SECRET } from "../../const.js";
+import { JWT_SECRET, ADMIN_SECRET } from "../../app.js";
 import User from "../../models/user.js";
 import jwt from 'jsonwebtoken';
 import errorHandler from "../errors/errHandling.js";
