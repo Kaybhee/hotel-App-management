@@ -2,9 +2,7 @@ import User from '../models/user.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
-import { ADMIN_SECRET } from '../app.js'
-import { JWT_SECRET } from '../app.js'
-
+import { JWT_SECRET, ADMIN_SECRET } from '../app.js'
 
 export const register = async(req, res, next) => {
     const { userName, email, password, isAdmin, adminKey } = req.body;
@@ -67,7 +65,7 @@ export const userLogin = async(req, res, next) => {
             return next(errorHandler(400, "Token not generated")) 
         }
         // const { password: _, ...userLog } = user._doc
-        return res.status(200).json({mesage: "User logged in successfuly", token: `Bearer ${genToken}`})
+        return res.status(200).json({message: "User logged in successfully", token: `Bearer ${genToken}`})
     } catch (error) {
         console.error(error)
         next(error)
