@@ -1,6 +1,5 @@
 import express from 'express';
 import { adminOnly } from '../middlewares/Admin/isAdmin.js';
-import { protectAuth } from './../middlewares/auth/protectAuth.js';
 import { delUser, getUser, getUsers, updateUser, } from '../controller/users.js';
 import { protectAuth } from '../middlewares/auth/protectAuth.js';
 
