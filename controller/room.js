@@ -1,4 +1,3 @@
-import express from 'express';
 import Room from '../models/rooms.js';
 import Hotels from '../models/hotels.js';
 import errorHandler from '../middlewares/errors/errHandling.js';
@@ -30,9 +29,8 @@ export const createRoom = async(req, res, next) => {
 
 export const updateRoom = async(req, res, next) => {
     const { roomId } = req.params
-    // const upHotels = new Hotels(req.body)
     console.log("Request Params:", req.params); // Log the entire req.params object
-    console.log("roomId ID:", roomId); //
+    console.log("roomId ID:", roomId); //Debugging
     try {
         const findRoom = await Room.findByIdAndUpdate(roomId, {$set: req.body}, {new: true} )
         if (!findRoom) {
@@ -43,7 +41,7 @@ export const updateRoom = async(req, res, next) => {
             data: findRoom
         })
     } catch (err) {
-        console.error({error: "Error", err}) //Log errors
+        console.error({error: "Error", err}) 
         return next(err)
     }
 }
@@ -52,13 +50,13 @@ export const updateRoom = async(req, res, next) => {
 export const getRooms = async(req, res, next) => {
     try {
         const rooms =await Room.find()
-        if (!getRooms) {
+        if (!rooms) {
             return next(errorHandler(400,"No rooms found"))
         }
             return res.status(200).json({
                 message: "Rooms successfully retrieved", rooms})
     } catch (err) {
-        console.log({error: "Error", err}) // Log all errors
+        console.log({error: "Error", err}) 
         next(err)
 }
 }
@@ -82,7 +80,7 @@ export const delRoom = async(req, res) => {
             return res.status(400).json({message: "Room does not exist"})
         }
         try {
-            await Hotels.findByIdAndUpdate(req.params.hotelId, {$pull: {rooms: req.params.roomId}})
+            await Hotels.findByIdAndUpdate(req.params.hotelId, {$pull: {rooms: req.params.roomId}})  //Find and remove room from hotel
         } catch (err){
             next(err)
         }
@@ -97,7 +95,7 @@ export const updateRoomAvailability = async(req, res, next) =>{
         await Room.updateOne(
             {"roomNumbers._id": req.params.roomNumberId},
         {
-            // $ sign used to catch the info in a nested list
+            // '$' sign used to catch the info in a nested list
             $push: {
             "roomNumbers.$.unavailableDate": req.body.dates
         }
