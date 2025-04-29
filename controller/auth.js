@@ -2,9 +2,8 @@ import User from '../models/user.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
-import { ADMIN_SECRET } from '../const.js';
-// import { JWT_SECRET } from '../const.js';
-import {JWT_SECRET} from '../const.js'
+import { ADMIN_SECRET } from '../app.js'
+import { JWT_SECRET } from '../app.js'
 
 
 export const register = async(req, res, next) => {
