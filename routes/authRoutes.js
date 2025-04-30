@@ -1,13 +1,15 @@
 import express from 'express';
-import { register, userLogin } from '../controller/auth.js';
+import { register, userLogin, verifyUserRegistration, resendUserOtp } from '../controller/auth.js';
 import { adminOnly } from '../middlewares/Admin/isAdmin.js';
 
 
 // routes
 const authRoutes = express.Router()
 
-// post method for users
+// post & patch method for users
 authRoutes.post('/create-user', register)
+authRoutes.post('/resend-user-otp', resendUserOtp)
+authRoutes.patch('/verify-user-registration', verifyUserRegistration)
 authRoutes.post('/login', userLogin) // Login user
 // 
 authRoutes.post('/login/admin', adminOnly, userLogin) // Login user
