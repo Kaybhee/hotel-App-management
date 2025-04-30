@@ -8,11 +8,15 @@ import roomRoutes from './routes/roomRoutes.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
+import cors from 'cors';
+
 dotenv.config()
 export const MONGODB_URI = process.env.MONGODB_URI
 export const JWT_SECRET = process.env.JWT_SECRET
 export const ADMIN_SECRET = process.env.ADMIN_SECRET
 const PORT = 5000
+
+
 
 // Connect to database
 connectDB()
@@ -25,6 +29,9 @@ app.get('/', (req, res) => {
 // middlewares
 app.use(express.json())
 app.use(morgan('dev'))
+
+app.use(cors());
+
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
 app.use('/api/v1/auth', authRoutes)
