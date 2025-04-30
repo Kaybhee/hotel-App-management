@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use(cors());
+app.use(cors('*'));
 
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
