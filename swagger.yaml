@@ -5,7 +5,7 @@ info:
   description: API documentation for a hotel booking system.
 
 servers:
-  - url: http://hotel-app-management.onrender.com
+  - url: https://hotel-app-management.onrender.com
   - url: http://localhost:5000/api/v1
 
 paths:
