@@ -50,7 +50,7 @@ export const register = async(req, res, next) => {
             if (!user.isVerified && !user.isAdmin) {
                 const code = Math.floor(100000 + Math.random() * 900000);
             cache.set(email, code.toString(), 3600000);
-            const sendingEmail = sendEmail(email, {
+            const sendingEmail = await sendEmail(email, {
                 subject: "Account verification",
                 message: `Your verification code is ${code}`
             });
@@ -177,3 +177,26 @@ export const userLogin = async(req, res, next) => {
             next(err)
           }
         }
+
+
+export const adminLogin = async(req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({email})
+    if (!user) {
+      return next(errorHandler(404, "User not found"))
+    }
+    const isPass = await bcrypt.compare(password, user.password);
+    if (!user.isAdmin) {
+      return next(errorHandler(403, "Access denied"))
+    }
+    if (!user || !isPass) {
+      return next(errorHandler(400, "Try again, Password is incorrect"))
+    }
+    return res.status(200).json({
+      message: "Admin Logged in successfully"
+    })
+  } catch (err) {
+    next(err)
+  }
+}
