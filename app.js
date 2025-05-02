@@ -46,4 +46,5 @@ setupSwaggerDocs(app);
 // Connect to mongoDB
 app.listen(PORT || MONGODB_URI, () => {
     console.log(`Server is running at http://localhost:${PORT}`)
+    console.log('https://hotel-app-management.onrender.com')
 })
