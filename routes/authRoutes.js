@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, userLogin, verifyUserRegistration, resendUserOtp } from '../controller/auth.js';
+import { register, userLogin, verifyUserRegistration, resendUserOtp, adminLogin } from '../controller/auth.js';
 import { adminOnly } from '../middlewares/Admin/isAdmin.js';
 
 
@@ -12,7 +12,7 @@ authRoutes.post('/resend-user-otp', resendUserOtp)
 authRoutes.patch('/verify-user-registration', verifyUserRegistration)
 authRoutes.post('/login', userLogin) // Login user
 // 
-authRoutes.post('/login/admin', adminOnly, userLogin) // Login user
+authRoutes.post('/login/admin', adminOnly, adminLogin) // Admin login
 
 
 export default authRoutes
