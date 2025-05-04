@@ -6,7 +6,10 @@ info:
 
 servers:
   - url: https://hotel-app-management.onrender.com/api/v1
+    description: Production server (Render)
   - url: http://localhost:5000/api/v1
+    description: Local development server
+
 
 paths:
   /auth/create-user:
@@ -132,7 +135,7 @@ paths:
 
   /hotels/create-hotels:
     post:
-      summary: Create a new hotel
+      summary: Add a new hotel (Admin only)
       tags: [Hotels]
       security:
         - bearerAuth: []
@@ -146,10 +149,25 @@ paths:
                 - name
                 - location
               properties:
-                name:
+                hotelName:
                   type: string
-                location:
+                title:
                   type: string
+                address:
+                  type: string
+                city:
+                  type: string
+                desc:
+                  type: string
+                cheapestRooms:
+                  type: number
+                rating:
+                  type: number
+                  min: 0
+                  max: 5
+                distance:
+                  type: string
+
       responses:
         '201':
           description: Hotel created
@@ -252,16 +270,23 @@ paths:
             schema:
               type: object
               required:
-                - roomNumber
-                - type
+                - title
                 - price
+                - maxPeople
+                - desc
+                - roomNumber
               properties:
-                roomNumber:
-                  type: string
-                type:
+                title:
                   type: string
                 price:
                   type: number
+                maxPeople:
+                  type: number
+                desc:
+                  type: string
+                roomNumber:
+                  type: number
+                
       responses:
         '201':
           description: Room created
@@ -307,11 +332,15 @@ paths:
             schema:
               type: object
               properties:
-                roomNumber:
-                  type: string
-                type:
+                title:
                   type: string
                 price:
+                  type: number
+                maxPeople:
+                  type: number
+                desc:
+                  type: string
+                roomNumber:
                   type: number
       responses:
         '200':
