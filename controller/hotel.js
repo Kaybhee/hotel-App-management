@@ -4,14 +4,15 @@ import errorHandler from '../middlewares/errors/errHandling.js'
 
 
 export const createHotels = async(req, res, next) => {
-    const newHotel = new Hotels(req.body) 
+    const newHotel = new Hotels(req.body)
     try {
-        const existingHotel = await Hotels.findOne({hotelType: newHotel.hotelType})
-        if (existingHotel) {
-            return next(errorHandler("Hotel already exists"));
+        const existingHotel = await Hotels.findOne({hotelName: newHotel.hotelName, title: newHotel.title})
+        const hotelAddress = await Hotels.findOne({address: newHotel.address})
+        if (existingHotel && hotelAddress) {
+            return next(errorHandler(400, "Hotel already exists"));
         }
         const savedHotel = await newHotel.save()
-        console.log(savedHotel)                                                     
+        // console.log(savedHotel)                                                     
         return res.status(200).json({message: "Hotel saved successfully", savedHotel})
 
     } catch (err) {
@@ -22,16 +23,16 @@ export const createHotels = async(req, res, next) => {
 
 export const updateHotels = async(req, res) => {
     const { hotelId } = req.params
-    console.log("Request Params:", req.params); // Log the entire req.params object
-    console.log("Hotel ID:", hotelId); // Debugging
+    // console.log("Request Params:", req.params); // Log the entire req.params object
+    // console.log("Hotel ID:", hotelId); // Debugging
     try {
         console.log(hotelId)
         const findHotels = await Hotels.findById(hotelId)
         if (!findHotels) {
-            return next(errorHandler("Hotel does not exist"))
+            return next(errorHandler(404, "Hotel does not exist"))
         }
         if (req.body.hotelType || req.body.title) {
-            return next(errorHandler("Hotel type and title cannot be updated"))
+            return next(errorHandler(400, "Hotel name and title cannot be updated"))
         }
 
         findHotels.city = req.body.city || findHotels.city
@@ -56,7 +57,7 @@ export const getHotels = async(req, res) => {
     try {
         const getHotels =await Hotels.find()
         if (!getHotels) {
-            return next(errorHandler("No hotels found"))
+            return next(errorHandler(404, "No hotels found"))
         } else {
             return res.status(200).json({message: "Hotels successfully retrieved", getHotels})
         }
@@ -64,12 +65,12 @@ export const getHotels = async(req, res) => {
         next(err)
     }
 }
-export const getHotel = async(req, res) => {
+export const getHotel = async(req, res, next) => {
     const { hotelId } = req.params
     try {
         const getHotel = await Hotels.findById(hotelId)
         if (!getHotel) {
-            return next(errorHandler("Hotel does not exist"))
+            return next(errorHandler(404,"Hotel does not exist"))
         } else {
             return res.status(200).json({message: "Hotel successfully retrieved", getHotel})
         }
@@ -83,7 +84,7 @@ export const delHotels = async(req, res) => {
     try {
         const deleteHot = await Hotels.findByIdAndDelete(hotelId)
         if (!deleteHot) {
-            return next(errorHandler("Hotel does not exist"))
+            return next(errorHandler(404, "Hotel does not exist"))
         } else {
             return res.status(200).json({message: "Hotel successfully deleted", deleteHot})
         } 
