@@ -324,29 +324,29 @@ paths:
               schema:
                 type: object
                 required:
-                - userId
-                - roomId
-                - roomNumber
-                - startDate
-                - endDate
-              properties:
-                userId:
-                  type: string
-                  example: "60f6f9f5b9f1a2a0c8d8e8e8"
-                roomId:
-                  type: string
-                  example: "60f6f9f5b9f1a2a0c8d8e8e9"
-                roomNumber:
-                  type: integer
-                  example: 101
-                startDate:
-                  type: string
-                  format: date-time
-                  example: "2025-06-01"
-                endDate:
-                  type: string
-                  format: date-time
-                  example: "2025-06-05"
+                  - userId
+                  - roomId
+                  - roomNumber
+                  - startDate
+                  - endDate
+                properties:
+                  userId:
+                    type: string
+                    example: "60f6f9f5b9f1a2a0c8d8e8e8"
+                  roomId:
+                    type: string
+                    example: "60f6f9f5b9f1a2a0c8d8e8e9"
+                  roomNumber:
+                    type: integer
+                    example: 101
+                  startDate:
+                    type: string
+                    format: date-time
+                    example: "2025-06-01"
+                  endDate:
+                    type: string
+                    format: date-time
+                    example: "2025-06-05"
               responses:
                 '200':
                   description: Room booked successfully
