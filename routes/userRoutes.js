@@ -15,7 +15,7 @@ userRoutes.get('/:userId', protectAuth, getUser);
 userRoutes.put('/update-user/:userId', protectAuth, updateUser)
 
 // booking routes  
-bookingRoutes.post('/book-room', bookRoom)
+// bookingRoutes.post('/book-room', bookRoom)
 
 
 userRoutes.delete('/delete-user/:userId', adminOnly, delUser)
