@@ -8,7 +8,7 @@ import roomRoutes from './routes/roomRoutes.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
-import '../hotelApp/jobs/cleanDates.js'
+import './jobs/cleanDates.js'
 import cors from 'cors';
 
 dotenv.config()
