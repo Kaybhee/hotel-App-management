@@ -348,15 +348,15 @@ paths:
                     type: string
                     format: date-time
                     example: "2025-06-05"
-              responses:
-                '200':
-                  description: Room booked successfully
-                '400':
-                  description: Bad request (e.g., already booked or unavailable dates)
-                '404':
-                  description: Room or room number not found
-                '500':
-                  description: Internal server error
+       responses:
+         '200':
+           description: Room booked successfully
+         '400':
+           description: Bad request (e.g., already booked or unavailable dates)
+         '404':
+           description: Room or room number not found
+         '500':
+           description: Internal server error
 
   /room/update-room/{roomId}:
     put:
