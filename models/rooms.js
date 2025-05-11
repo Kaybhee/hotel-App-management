@@ -18,7 +18,11 @@ const roomSchema = mongoose.Schema({
         required: true,
         // select: false,
       },
-      roomNumbers: [{number: Number, unavailableDate: {type: [Date]}}]
+      roomNumbers: [{
+        number: {type: Number, required: true},
+        unavailableDates: {type: [Date], default: []}
+      }
+    ]
     }, {timestamps: true}
 )
 const Room = mongoose.model("Room", roomSchema);
