@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
 import { JWT_SECRET, ADMIN_SECRET } from '../app.js'
 import { sendEmail } from '../services/mail.js';
-import { configDotenv } from 'dotenv';
 
 const cache = new NodeCache()
 
@@ -171,7 +170,7 @@ export const userLogin = async(req, res, next) => {
                 if (!genToken) {
                     return next(errorHandler(400, "Token not generated")) 
                 }
-                return res.status(200).json({message: "User logged in successfully", token: `Bearer ${genToken}`})
+                return res.status(200).json({message: "User logged in successfully", data: userCred, token: `Bearer ${genToken}`})
             }
             } catch (err) {
             next(err)
