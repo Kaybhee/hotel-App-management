@@ -8,7 +8,7 @@ import roomRoutes from './routes/roomRoutes.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
-import './jobs/cleanDates.js'
+import './jobs/cleanDates.js';
 import cors from 'cors';
 
 dotenv.config()
@@ -38,7 +38,7 @@ app.use('/api/v1/hotels', hotelRoutes)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/room', roomRoutes)
-app.use('/api/v1/booking', bookingRoutes)
+// app.use('/api/v1/booking', bookingRoutes)
 
 // Error middleware
 app.use(errCheck);
