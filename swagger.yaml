@@ -313,7 +313,7 @@ paths:
         '200':
           description: Room retrieved
 
-  /book-room:
+  /rooms/book-room:
     post:
     summary: Book a room
     tags: [Rooms]
