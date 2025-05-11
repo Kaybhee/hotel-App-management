@@ -313,10 +313,10 @@ paths:
         '200':
           description: Room retrieved
 
-  /booking/book-room:
+  /book-room:
     post:
     summary: Book a room
-    tags: [Booking]
+    tags: [Rooms]
     requestBody:
       required: true
       content: 
