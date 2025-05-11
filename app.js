@@ -3,11 +3,12 @@ import { connectDB } from './config/db.js';
 import hotelRoutes from './routes/hotelRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import errCheck from './middlewares/errors/error.js';
-import userRoutes from './routes/userRoutes.js';
+import {userRoutes, bookingRoutes } from './routes/userRoutes.js';
 import roomRoutes from './routes/roomRoutes.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
+import '../hotelApp/jobs/cleanDates.js'
 import cors from 'cors';
 
 dotenv.config()
@@ -37,6 +38,7 @@ app.use('/api/v1/hotels', hotelRoutes)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/room', roomRoutes)
+app.use('/api/v1/booking', bookingRoutes)
 
 // Error middleware
 app.use(errCheck);
