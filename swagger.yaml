@@ -251,7 +251,7 @@ paths:
         '200':
           description: Rooms retrieved
 
-  /rooms/create-room/{hotelId}:
+  /room/create-room/{hotelId}:
     post:
       summary: Create a room in a hotel (Admin only)
       tags: [Rooms]
@@ -291,18 +291,18 @@ paths:
         '201':
           description: Room created
 
-  /rooms:
+  /room:
     get:
       summary: Get all rooms
-      tags: [Rooms]
+      tags: [Room]
       responses:
         '200':
           description: Rooms retrieved
 
-  /rooms/{roomId}:
+  /room/{roomId}:
     get:
       summary: Get a specific room
-      tags: [Rooms]
+      tags: [Room]
       parameters:
         - in: path
           name: roomId
@@ -313,10 +313,11 @@ paths:
         '200':
           description: Room retrieved
 
-  /rooms/book-room:
+  /room/book-room:
     post:
        summary: Book a room
-       tags: [Rooms]
+       description: Allows a user to book a room if available and receive a confirmation email.
+       tags: [Room]
        requestBody:
          required: true
          content: 
@@ -357,10 +358,10 @@ paths:
                 '500':
                   description: Internal server error
 
-  /rooms/update-room/{roomId}:
+  /room/update-room/{roomId}:
     put:
       summary: Update a room (Admin only)
-      tags: [Rooms]
+      tags: [Room]
       security:
         - bearerAuth: []
       parameters:
@@ -390,10 +391,10 @@ paths:
         '200':
           description: Room updated
 
-  /rooms/delete-room/{roomId}/{hotelId}:
+  /room/delete-room/{roomId}/{hotelId}:
     delete:
       summary: Delete a room (Admin only)
-      tags: [Rooms]
+      tags: [Room]
       security:
         - bearerAuth: []
       parameters:
@@ -411,10 +412,10 @@ paths:
         '200':
           description: Room deleted
 
-  /rooms/availability/{roomNumberId}:
+  /room/availability/{roomNumberId}:
     put:
       summary: Update room availability
-      tags: [Rooms]
+      tags: [Room]
       security:
         - bearerAuth: []
       parameters:

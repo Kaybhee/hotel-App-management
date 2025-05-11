@@ -27,7 +27,7 @@ export const sendEmail = async(to, data) => {
   
     <body>
       <div class="body" style="text-align: center; font-family: sans-serif">
-        <!-- <img src="https://files.lucacify.com/lucacify-blue.PNG" alt="Lucacify" height="100"> -->
+        <!-- <img src="Best-Luxury-Hotels-in-Manila-The-Excelsior-Hotel.jpg" alt="Hotel" height="100"> -->
         <h3>Welcome to Ikorodu Hotel packard.</h3>
         <p>
           ${data.message}
