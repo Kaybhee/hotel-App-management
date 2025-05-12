@@ -31,7 +31,7 @@ export const updateHotels = async(req, res) => {
         if (!findHotels) {
             return next(errorHandler(404, "Hotel does not exist"))
         }
-        if (req.body.hotelType || req.body.title) {
+        if (req.body.hotelName || req.body.title) {
             return next(errorHandler(400, "Hotel name and title cannot be updated"))
         }
 
