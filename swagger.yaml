@@ -213,10 +213,18 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                city:
                   type: string
-                location:
+                address:
                   type: string
+                desc:
+                  type: string
+                rating:
+                  type: integer
+                cheapestRooms:
+                  type: number
+                available:
+                  type: boolean
       responses:
         '200':
           description: Hotel updated
@@ -254,7 +262,7 @@ paths:
   /room/create-room/{hotelId}:
     post:
       summary: Create a room in a hotel (Admin only)
-      tags: [Rooms]
+      tags: [Room]
       security:
         - bearerAuth: []
       parameters:
