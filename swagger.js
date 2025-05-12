@@ -14,5 +14,5 @@ const swaggerDocument = YAML.load(path.join(__dirname, './swagger.yaml'));
 // Set up Swagger middleware
 export const setupSwaggerDocs = (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  console.log('📘 Swagger docs available at /api-docs')
+  console.log('Swagger docs available at /api-docs')
 }
