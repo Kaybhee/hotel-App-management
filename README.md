@@ -116,7 +116,8 @@ A comprehensive Node.js API for hotel and room management, user registration wit
     "email": "your@email.com",
     "password": "yourPassword"
   }
-Description: An OTP is sent to your email for verification.
+- **Description:** An OTP is sent to your email for verification.
+
 **Verify OTP:**
 - **Endpoint:** `PATCH /api/v1/auth/verify-user-registration`
 - **Body:**
@@ -125,33 +126,33 @@ Description: An OTP is sent to your email for verification.
     "email": "your@email.com",
     "otp": "123456"
     }
-Description: Provide your email and the OTP code to activate your account.
+- **Description:** Provide your email and the OTP code to activate your account.
 **Resend OTP:**
 - **Endpoint:**`POST /api/v1/auth/resend-user-otp`
-**Body:**
+- **Body:**
     ```sh
     {
     "email": "your@email.com"
     }
-Description: Use if the OTP expires or is lost.
+- **Description:** Use if the OTP expires or is lost.
 ---
 ### 2. User Login
 **Login:**
 - **Endpoint:** `POST /api/v1/auth/login`
-**Body:**
+- **Body:**
     ```sh
     {
-  "email": "your@email.com",
-  "password": "yourPassword"
+    "email": "your@email.com",
+    "password": "yourPassword"
     }
-Description: Receive a JWT token for authentication.
+- **Description:** Receive a JWT token for authentication.
 ---
 ### 3. Hotel & Room Management (Admin)
 **Create Hotel:**
 
 - **Endpoint:** `POST /api/v1/hotels/create-hotels`
 - **Headers:** `Authorization: Bearer <admin_token>`
-Description: Create a new hotel (admin only).
+- **Description:** Create a new hotel (admin only).
 **Update Hotel:**
 
 - **Endpoint:** `PUT /api/v1/hotels/update-hotels/:hotelId`
@@ -177,33 +178,32 @@ Description: Create a new hotel (admin only).
 **Book a Room:**
 
 - **Endpoint:**`POST /api/v1/room/book-room`
-**Body:**
+- **Body:**
     ```sh
     {
-  "userId": "user_id",
-  "roomId": "room_id",
-  "roomNumber": "101",
-  "startDate": "YYYY-MM-DD",
-  "endDate": "YYYY-MM-DD"
+    "userId": "user_id",
+    "roomId": "room_id",
+    "roomNumber": "101",
+    "startDate": "YYYY-MM-DD",
+    "endDate": "YYYY-MM-DD"
     }
-Description: Checks for availability and sends a confirmation email.
+- **Description:** Checks for availability and sends a confirmation email.
 ---
 ### 5. Reservation History
 **View Bookings:**
 
 - **Endpoint:** `GET /api/v1/booking/user-bookings/:userId`
-Description: Returns all bookings for the user.
+- **Description:** Returns all bookings for the user.
 ---
 ### 6. Node Cron Jobs
-**Automated Cleanup:**
-Node Cron is used to schedule a job that runs periodically (e.g., daily) to remove expired dates from each room's ```unavailableDates``` array.
+**Automated Cleanup:**<br>
+Node Cron is used to schedule a job that runs periodically (e.g., daily) to remove expired dates from each room's ```unavailableDates``` array.<br>
 This ensures that past bookings do not block future reservations.
 
 **Example (```jobs/cleanDates.js```):**
     ```sh
     const cron = require('node-cron');
     const Room = require('../models/Room');
-
     cron.schedule('0 0 * * *', async () => {
     const today = new Date();
     await Room.updateMany(
@@ -235,24 +235,24 @@ CRUD for rooms, update availability (controller/room.js)
 Room booking logic, email confirmation (controller/booking.js)
 ---
 How to Use the API via Swagger
-1. Open Swagger UI:
+1. **Open Swagger UI:**<br>
 Go to https://hotel-app-management.onrender.com/api-docs
 
-2. Register a User:
+2. **Register a User:**<br>
 Use `/auth/create-user` and check your email for OTP.
 
-3. Verify Account:
+3. **Verify Account:**<br>
 Use `/auth/verify-user-registration` with your email and OTP.
 
-4. Login:
+4. **Login:**<br>
 Use `/auth/login` to get your JWT token.
 
-5. Authorize:
+5. **Authorize:**<br>
 Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
 
-6. Explore Endpoints:
+6. **Explore Endpoints:**<br>
 
-- [Admins: Manage hotels and rooms.]
-- [Users: Book rooms, view]bookings, etc.
-7. Booking:
+- **Admins:** <br>Manage hotels and rooms.
+- **Users:** <br>Book rooms, view bookings, etc.
+7. **Booking:**<br>
 Use `/room/book-room` with required details.
