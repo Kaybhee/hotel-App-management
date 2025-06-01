@@ -241,9 +241,9 @@ This ensures that past bookings do not block future reservations.
 https://hotel-app-management.onrender.com/api-docs
 ---
 **Deployment**
-- **Production:**
+- **Production:** <br>
 https://hotel-app-management.onrender.com
-- **Swagger Docs:**
+- **Swagger Docs:**<br>
 https://hotel-app-management.onrender.com/api-docs
 ---
 **Controllers Overview**
