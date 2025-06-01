@@ -292,5 +292,5 @@ Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
 7. **Booking:**<br>
 Use `/room/book-room` with required details.
 ---
----
-**References:**
+**Reference:**
+* Lama Dev
