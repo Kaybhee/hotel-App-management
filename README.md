@@ -272,13 +272,27 @@ Use `/auth/login` to get your JWT token.
 5. **Authorize:**<br>
 Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
 
-6. **Explore Endpoints:**<br>
+6. 5. **Admin Access:**  
+   - To perform admin operations (like creating hotels or rooms), you must log in as an admin.
+   - Admin accounts are typically created by providing a special `ADMIN_SECRET` during registration or are seeded by the developer.
+   - When registering an admin, include the `adminSecret` field in your request body:
+     ```json
+     {
+       "userName": "adminName",
+       "email": "admin@email.com",
+       "password": "yourPassword",
+       "adminSecret": "your_admin_secret"
+     }
+     ```
+   - If the `adminSecret` matches the value in your [.env](http://_vscodecontentref_/0) file (`ADMIN_SECRET`), the user will be assigned the `admin` role.
+
+
+7. **Explore Endpoints:**<br>
 
 - **Admins:** <br>Manage hotels and rooms.
 - **Users:** <br>Book rooms, view bookings, etc.
 7. **Booking:**<br>
 Use `/room/book-room` with required details.
 ---
-Happy Booking With Us
 ---
 **References:**
