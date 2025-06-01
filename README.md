@@ -207,6 +207,7 @@ Node Cron is used to schedule a job that runs periodically (e.g., daily) to remo
 This ensures that past bookings do not block future reservations.
 
 **Example (```jobs/cleanDates.js```):**<br>
+    
     ```sh
     const cron = require('node-cron');
     const Room = require('../models/Room');
