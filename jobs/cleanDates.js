@@ -17,9 +17,7 @@ cron.schedule('* * * * *', async (next) => {
             room.roomNumbers.forEach((roomNumber) => {
                 const originalDates = [...roomNumber.unavailableDates];
                 roomNumber.unavailableDates = roomNumber.unavailableDates.filter((date) => new Date(date) >= new Date())
-                // console.log(`Room ${room._id}, Room number ${roomNumber.number}:`) 
-                // console.log(`Original Dates: ${originalDates}`);
-                // console.log(`Updated Dates: ${roomNumber.unavailableDates}`);
+              
             })
             await room.save();
             // console.log(`Room ${room._id} updated successfully`);
