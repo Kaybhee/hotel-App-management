@@ -116,67 +116,67 @@ A comprehensive Node.js API for hotel and room management, user registration wit
     "email": "your@email.com",
     "password": "yourPassword"
   }
-* Description: An OTP is sent to your email for verification.
-Verify OTP:
-
-* Endpoint: PATCH /api/v1/auth/verify-user-registration
-**Body:**
+Description: An OTP is sent to your email for verification.
+**Verify OTP:**
+- **Endpoint:** `PATCH /api/v1/auth/verify-user-registration`
+- **Body:**
     ```sh
     {
     "email": "your@email.com",
     "otp": "123456"
     }
-* Description: Provide your email and the OTP code to activate your account.
-Resend OTP:
-
-* Endpoint: POST /api/v1/auth/resend-user-otp
+Description: Provide your email and the OTP code to activate your account.
+**Resend OTP:**
+- **Endpoint:**`POST /api/v1/auth/resend-user-otp`
 **Body:**
     ```sh
     {
     "email": "your@email.com"
     }
-* Description: Use if the OTP expires or is lost.
-2. User Login
-Login:
-
-* Endpoint: POST /api/v1/auth/login
+Description: Use if the OTP expires or is lost.
+---
+### 2. User Login
+**Login:**
+- **Endpoint:** `POST /api/v1/auth/login`
 **Body:**
     ```sh
     {
   "email": "your@email.com",
   "password": "yourPassword"
-}
-* Description: Receive a JWT token for authentication.
- Hotel & Room Management (Admin)
-Create Hotel:
+    }
+Description: Receive a JWT token for authentication.
+---
+### 3. Hotel & Room Management (Admin)
+**Create Hotel:**
 
-* Endpoint: POST /api/v1/hotels/create-hotels
-* Headers: Authorization: Bearer <admin_token>
-* Description: Create a new hotel (admin only).
-Update Hotel:
+- **Endpoint:** `POST /api/v1/hotels/create-hotels`
+- **Headers:** `Authorization: Bearer <admin_token>`
+Description: Create a new hotel (admin only).
+**Update Hotel:**
 
-* Endpoint: PUT /api/v1/hotels/update-hotels/:hotelId
-* Headers: Authorization: Bearer <admin_token>
-Delete Hotel:
+- **Endpoint:** `PUT /api/v1/hotels/update-hotels/:hotelId`
+- **Headers:** `Authorization: Bearer <admin_token>`
+**Delete Hotel:**
 
-* Endpoint: DELETE /api/v1/hotels/delete-hotel/:hotelId
-* Headers: Authorization: Bearer <admin_token>
-Create Room:
+- **Endpoint:** `DELETE /api/v1/hotels/delete-hotel/:hotelId`
+- **Headers:** `Authorization: Bearer <admin_token>`
+**Create Room:**
 
-* Endpoint: POST /api/v1/room/create-room/:hotelId
-* Headers: Authorization: Bearer <admin_token>
-Update Room:
+- **Endpoint:** `POST /api/v1/room/create-room/:hotelId`
+- **Headers:** `Authorization: Bearer <admin_token>`
+**Update Room:**
 
-* Endpoint: PUT /api/v1/room/update-room/:roomId
-* Headers: Authorization: Bearer <admin_token>
-Delete Room:
+- **Endpoint:** `PUT /api/v1/room/update-room/:roomId`
+- **Headers:** `Authorization: Bearer <admin_token>`
+**Delete Room:**
 
-* Endpoint: DELETE /api/v1/room/delete-room/:roomId/:hotelId
-* Headers: Authorization: Bearer <admin_token>
-4. Room Booking (User)
-Book a Room:
+- **Endpoint:** `DELETE /api/v1/room/delete-room/:roomId/:hotelId`
+- **Headers:** `Authorization: Bearer <admin_token>`
+---
+### 4. Room Booking (User)
+**Book a Room:**
 
-* Endpoint: POST /api/v1/room/book-room
+- **Endpoint:**`POST /api/v1/room/book-room`
 **Body:**
     ```sh
     {
@@ -185,33 +185,74 @@ Book a Room:
   "roomNumber": "101",
   "startDate": "YYYY-MM-DD",
   "endDate": "YYYY-MM-DD"
-}
-* Description: Checks for availability and sends a confirmation email.
-5. Reservation History
-View Bookings:
+    }
+Description: Checks for availability and sends a confirmation email.
+---
+### 5. Reservation History
+**View Bookings:**
 
-* Endpoint: GET /api/v1/booking/user-bookings/:userId
-* Description: Returns all bookings for the user.
-
-6. Node Cron Jobs
-Automated Cleanup:
+- **Endpoint:** `GET /api/v1/booking/user-bookings/:userId`
+Description: Returns all bookings for the user.
+---
+### 6. Node Cron Jobs
+**Automated Cleanup:**
 Node Cron is used to schedule a job that runs periodically (e.g., daily) to remove expired dates from each room's ```unavailableDates``` array.
 This ensures that past bookings do not block future reservations.
 
 **Example (```jobs/cleanDates.js```):**
     ```sh
     const cron = require('node-cron');
-const Room = require('../models/Room');
+    const Room = require('../models/Room');
 
-cron.schedule('0 0 * * *', async () => {
-  const today = new Date();
-  await Room.updateMany(
+    cron.schedule('0 0 * * *', async () => {
+    const today = new Date();
+    await Room.updateMany(
     {},
     { $pull: { unavailableDates: { endDate: { $lt: today } } } }
-  );
-  console.log('Expired unavailable dates cleaned up');
-});
-7. API Documentation (Swagger)
-* Access the full API docs:
-https://hotel-app-management.onrender.com/api-docs
+    );
+    console.log('Expired unavailable dates cleaned up');
+    });
 
+---
+### 7. API Documentation (Swagger)
+- **Access the full API docs:**
+https://hotel-app-management.onrender.com/api-docs
+---
+**Deployment**
+- **Production:**
+https://hotel-app-management.onrender.com
+- **Swagger Docs:**
+https://hotel-app-management.onrender.com/api-docs
+---
+**Controllers Overview**
+- **User/Auth:**
+Handles registration, OTP, login, and user CRUD (controller/users.js, controller/auth.js)
+- **Hotel:**
+CRUD for hotels (controller/hotel.js)
+- **Room:**
+CRUD for rooms, update availability (controller/room.js)
+- **Booking:**
+Room booking logic, email confirmation (controller/booking.js)
+---
+How to Use the API via Swagger
+1. Open Swagger UI:
+Go to https://hotel-app-management.onrender.com/api-docs
+
+2. Register a User:
+Use `/auth/create-user` and check your email for OTP.
+
+3. Verify Account:
+Use `/auth/verify-user-registration` with your email and OTP.
+
+4. Login:
+Use `/auth/login` to get your JWT token.
+
+5. Authorize:
+Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
+
+6. Explore Endpoints:
+
+- [Admins: Manage hotels and rooms.]
+- [Users: Book rooms, view]bookings, etc.
+7. Booking:
+Use `/room/book-room` with required details.
