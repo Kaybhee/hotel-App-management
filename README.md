@@ -206,7 +206,7 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 Node Cron is used to schedule a job that runs periodically (e.g., daily) to remove expired dates from each room's ```unavailableDates``` array.<br>
 This ensures that past bookings do not block future reservations.
 
-**Example (```jobs/cleanDates.js```):**
+**Example (```jobs/cleanDates.js```):**<br>
     ```sh
     const cron = require('node-cron');
     const Room = require('../models/Room');
@@ -221,7 +221,7 @@ This ensures that past bookings do not block future reservations.
 
 ---
 ### 7. API Documentation (Swagger)
-- **Access the full API docs:**
+- **Access the full API docs:**<br>
 https://hotel-app-management.onrender.com/api-docs
 ---
 **Deployment**
@@ -231,13 +231,13 @@ https://hotel-app-management.onrender.com
 https://hotel-app-management.onrender.com/api-docs
 ---
 **Controllers Overview**
-- **User/Auth:**
+- **User/Auth:**<br>
 Handles registration, OTP, login, and user CRUD (controller/users.js, controller/auth.js)
-- **Hotel:**
+- **Hotel:**<br>
 CRUD for hotels (controller/hotel.js)
-- **Room:**
+- **Room:**<br>
 CRUD for rooms, update availability (controller/room.js)
-- **Booking:**
+- **Booking:**<br>
 Room booking logic, email confirmation (controller/booking.js)
 ---
 How to Use the API via Swagger
@@ -262,3 +262,7 @@ Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
 - **Users:** <br>Book rooms, view bookings, etc.
 7. **Booking:**<br>
 Use `/room/book-room` with required details.
+---
+Happy Booking With Us
+---
+**References:**
