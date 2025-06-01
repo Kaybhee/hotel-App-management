@@ -226,10 +226,8 @@ This ensures that past bookings do not block future reservations.
                 
                 })
                 await room.save();
-                // console.log(`Room ${room._id} updated successfully`);
             }
             console.log('Expired dates cleaned successfully');
-            
         } catch (err) {
             console.error('Error cleaning expired dates:', err);
         }
@@ -240,13 +238,13 @@ This ensures that past bookings do not block future reservations.
 - **Access the full API docs:**<br>
 https://hotel-app-management.onrender.com/api-docs
 ---
-**Deployment**
+### Deployment
 - **Production:** <br>
 https://hotel-app-management.onrender.com
 - **Swagger Docs:**<br>
 https://hotel-app-management.onrender.com/api-docs
 ---
-**Controllers Overview**
+### Controllers Overview
 - **User/Auth:**<br>
 Handles registration, OTP, login, and user CRUD (controller/users.js, controller/auth.js)
 - **Hotel:**<br>
@@ -256,7 +254,7 @@ CRUD for rooms, update availability (controller/room.js)
 - **Booking:**<br>
 Room booking logic, email confirmation (controller/booking.js)
 ---
-How to Use the API via Swagger
+### How to Use the API via Swagger
 1. **Open Swagger UI:**<br>
 Go to https://hotel-app-management.onrender.com/api-docs
 
