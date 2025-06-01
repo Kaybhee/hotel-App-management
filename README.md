@@ -207,17 +207,33 @@ Node Cron is used to schedule a job that runs periodically (e.g., daily) to remo
 This ensures that past bookings do not block future reservations.
 
 **Example (```jobs/cleanDates.js```):**<br>
-    ```sh
-    const cron = require('node-cron');
-    const Room = require('../models/Room');
-    cron.schedule('0 0 * * *', async () => {
-    const today = new Date();
-    await Room.updateMany(
-    {},
-    { $pull: { unavailableDates: { endDate: { $lt: today } } } }
-    );
-    console.log('Expired unavailable dates cleaned up');
-    });
+
+    ```sh        
+    cron.schedule('* * * * *', async (next) => {
+        try {
+            const rooms = await Room.find();
+            for ( const room of rooms) {
+                room.roomNumbers = room.roomNumbers.filter((roomNumber) => {
+                    if (!roomNumber.number) {
+                        console.warn(`Skipping roomNumber in room ${room._id} due to missing number`)
+                        return false;
+                    }
+                    return true;
+                })
+                room.roomNumbers.forEach((roomNumber) => {
+                    const originalDates = [...roomNumber.unavailableDates];
+                    roomNumber.unavailableDates = roomNumber.unavailableDates.filter((date) => new Date(date) >= new Date())
+                
+                })
+                await room.save();
+                // console.log(`Room ${room._id} updated successfully`);
+            }
+            console.log('Expired dates cleaned successfully');
+            
+        } catch (err) {
+            console.error('Error cleaning expired dates:', err);
+        }
+    })
 
 ---
 ### 7. API Documentation (Swagger)
