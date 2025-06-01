@@ -272,7 +272,7 @@ Use `/auth/login` to get your JWT token.
 5. **Authorize:**<br>
 Click "Authorize" in Swagger UI and paste your JWT token as `Bearer <token>`.
 
-6. 5. **Admin Access:**  
+6. **Admin Access:**  
    - To perform admin operations (like creating hotels or rooms), you must log in as an admin.
    - Admin accounts are typically created by providing a special `ADMIN_SECRET` during registration or are seeded by the developer.
    - When registering an admin, include the `adminSecret` field in your request body:
