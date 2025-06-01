@@ -154,22 +154,27 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 - **Endpoint:** `POST /api/v1/hotels/create-hotels`
 - **Headers:** `Authorization: Bearer <admin_token>`
 - **Description:** Create a new hotel (admin only).
+
 **Update Hotel:**
 
 - **Endpoint:** `PUT /api/v1/hotels/update-hotels/:hotelId`
 - **Headers:** `Authorization: Bearer <admin_token>`
+
 **Delete Hotel:**
 
 - **Endpoint:** `DELETE /api/v1/hotels/delete-hotel/:hotelId`
 - **Headers:** `Authorization: Bearer <admin_token>`
+
 **Create Room:**
 
 - **Endpoint:** `POST /api/v1/room/create-room/:hotelId`
 - **Headers:** `Authorization: Bearer <admin_token>`
+
 **Update Room:**
 
 - **Endpoint:** `PUT /api/v1/room/update-room/:roomId`
 - **Headers:** `Authorization: Bearer <admin_token>`
+
 **Delete Room:**
 
 - **Endpoint:** `DELETE /api/v1/room/delete-room/:roomId/:hotelId`
