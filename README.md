@@ -127,6 +127,7 @@ A comprehensive Node.js API for hotel and room management, user registration wit
     "otp": "123456"
     }
 - **Description:** Provide your email and the OTP code to activate your account.
+
 **Resend OTP:**
 - **Endpoint:**`POST /api/v1/auth/resend-user-otp`
 - **Body:**
