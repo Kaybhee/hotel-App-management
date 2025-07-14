@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import Room from '../models/rooms.js';
 
-cron.schedule('* * * * *', async (next) => {
+cron.schedule('0 0 * * *', async (next) => {
     try {
         console.log('Running cron job to clean expired dates...');
         const rooms = await Room.find();
