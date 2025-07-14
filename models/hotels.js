@@ -42,6 +42,10 @@ const hotelSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
+    isDelete: {
+        type: Boolean,
+        default: false
+    },
     // rooms: {
     //     type: [String]
     // }
