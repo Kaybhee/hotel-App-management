@@ -146,8 +146,8 @@ paths:
             schema:
               type: object
               required:
-                - name
-                - location
+                - hotelName
+                - address
               properties:
                 hotelName:
                   type: string
