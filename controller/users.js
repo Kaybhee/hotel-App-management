@@ -37,18 +37,24 @@ export const updateUser = async(req, res, next) => {
 
 export const getUsers = async(req, res, next) => {
     try {
-        const getUsers =await User.find()
-        if (!getUsers) {
+        // const getUsers =await User.find()
+        const page = req.query.limit || 1;
+        const limit = req.query.limit || 10;
+        const startIndex = (page - 1) * limit;
+        const total = await User.countDocuments({isDelete: false});
+        const returnUsers = await User.find({isDelete: false}).skip(startIndex).limit(limit)
+        if (!returnUsers) {
             return next(errorHandler(400,"No Users found"))
-        } 
-        const excludePass = [];
-            for (let i = 0; i < getUsers.length; i++) {
-                const { password: pass, ...userData } = getUsers[i]._doc
-            excludePass.push(userData)
+        }
+        //  destructuring password
+        const allUsers = [];
+            for (let i = 0; i < returnUsers.length; i++) {
+                const { password: pass, ...userData } = returnUsers[i]._doc
+            allUsers.push(userData)
         }
             
             return res.status(200).json({
-                message: "Users successfully retrieved", excludePass})
+                message: "Users successfully retrieved", data: {totalPages: Math.ceil(total/page), currentPage: page, users: allUsers}})
     } catch (err) {
         console.log({error: "Error", err}) // Log all errors
         next(err)
@@ -72,11 +78,11 @@ export const getUser = async(req, res) => {
 export const delUser = async(req, res) => {
     const { userId } = req.params
     try {
-        const deleteUser = await User.findByIdAndDelete(userId)
+        const deleteUser = await User.findByIdAndUpdate(userId, {isDelete: true}, {new: true})
         if (!deleteUser) {
             return res.status(400).json({message: "User does not exist"})
         } const { password: _, ...delPass } = deleteUser._doc
-            return res.status(200).json({message: "User successfully deleted", deleteUser})
+            return res.status(200).json({message: "User successfully deleted", delPass})
     } catch (err) {
         return next(err)
     }

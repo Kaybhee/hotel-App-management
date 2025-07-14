@@ -119,7 +119,7 @@ export async function resendUserOtp(req, res) {
       if (verificationCode !== code.toString()) {
         return next(errorHandler(400,"Invalid verification code"));
       } else {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email });
         if (!user) {
           return next(errorHandler("User not found"));
         } else {
@@ -170,7 +170,9 @@ export const userLogin = async(req, res, next) => {
                 if (!genToken) {
                     return next(errorHandler(400, "Token not generated")) 
                 }
-                return res.status(200).json({message: "User logged in successfully", data: userCred, token: `Bearer ${genToken}`})
+                // destructuring password
+                const { password: _, ...userData } = userCred._doc
+                return res.status(200).json({message: "User logged in successfully", data: userData, token: `Bearer ${genToken}`})
             }
             } catch (err) {
             next(err)
