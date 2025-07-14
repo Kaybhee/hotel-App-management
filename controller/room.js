@@ -49,12 +49,16 @@ export const updateRoom = async(req, res, next) => {
 
 export const getRooms = async(req, res, next) => {
     try {
-        const rooms =await Room.find()
-        if (!rooms) {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startIndex = (page - 1)  * limit;
+        const total = await Room.countDocuments()
+        const allRooms = await Room.find().skip(startIndex).limit(limit);
+        if (!allRooms) {
             return next(errorHandler(400,"No rooms found"))
         }
             return res.status(200).json({
-                message: "Rooms successfully retrieved", rooms})
+                message: "Rooms successfully retrieved", data: {Pages: Math.ceil(total/page), currentPage: page, rooms: allRooms}})
     } catch (err) {
         console.log({error: "Error", err}) 
         next(err)
