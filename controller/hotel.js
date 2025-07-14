@@ -55,11 +55,17 @@ export const updateHotels = async(req, res) => {
 
 export const getHotels = async(req, res) => {
     try {
-        const getHotels =await Hotels.find()
-        if (!getHotels) {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startIndex = (page - 1) * limit;
+        const totalPages = await Hotels.countDocuments({isDelete: false});
+        const returnHotels = await Hotels.find({ isDelete: false }).skip(startIndex).limit(limit)
+        console.log(returnHotels)
+        // const getHotels =await Hotels.find()
+        if (!returnHotels) {
             return next(errorHandler(404, "No hotels found"))
         } else {
-            return res.status(200).json({message: "Hotels successfully retrieved", getHotels})
+            return res.status(200).json({message: "Hotels successfully retrieved", data: {pages: Math.ceil(totalPages / limit), currentPage: page, hotels: returnHotels}})
         }
     } catch (err) {
         next(err)
@@ -72,21 +78,22 @@ export const getHotel = async(req, res, next) => {
         if (!getHotel) {
             return next(errorHandler(404,"Hotel does not exist"))
         } else {
-            return res.status(200).json({message: "Hotel successfully retrieved", getHotel})
+            return res.status(200).json({message: "Hotel successfully retrieved", data: getHotel})
         }
     } catch (err) {
         next(err)
     }
 }
 
-export const delHotels = async(req, res) => {
+export const delHotels = async(req, res, next) => {
     const { hotelId } = req.params
     try {
-        const deleteHot = await Hotels.findByIdAndDelete(hotelId)
+        const deleteHot = await Hotels.findByIdAndUpdate(hotelId, { isDelete: true }, {new: true})
+        // await deleteHot.save()
         if (!deleteHot) {
             return next(errorHandler(404, "Hotel does not exist"))
         } else {
-            return res.status(200).json({message: "Hotel successfully deleted", deleteHot})
+            return res.status(200).json({message: "Hotel successfully deleted", data: deleteHot})
         } 
     } catch (err) {
         next(err)
