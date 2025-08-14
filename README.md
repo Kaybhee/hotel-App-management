@@ -209,7 +209,7 @@ This ensures that past bookings do not block future reservations.
 **Example (```jobs/cleanDates.js```):**<br>
 
     ```sh        
-    cron.schedule('* * * * *', async (next) => {
+    cron.schedule('0 0 * * *', async (next) => {
         try {
             const rooms = await Room.find();
             for ( const room of rooms) {
