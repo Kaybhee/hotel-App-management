@@ -42,6 +42,7 @@ export const sendEmail = async(to, data) => {
 
 try {
   await sgMail.send(msg);
+  console.log("Email sent successfully!");
   return true;
 } catch (err) {
   console.error("Sendgrid error:", err);
