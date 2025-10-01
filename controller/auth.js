@@ -15,20 +15,14 @@ export const register = async(req, res, next) => {
         if (!userName || !email || !password) {
             return next(errorHandler(400, "Please fill in all fields"));
         }
-        const existingUser = await User.findOne({email});
+        const existingUser = await User.findOne({email, userName});
         if (existingUser) {
-            return next(errorHandler(400, "Email already exists"));
+            return next(errorHandler(400, "Email or Password already exists"));
         }
         if (password.length < 8) {
             return next(errorHandler(400, "Password must be at least 8 characters"))
         }
-
-        const existingUserName = await User.findOne({ userName });
-
-    if (existingUserName) {
-      return next(errorHandler(400, "Username already exists"));
-    }
-
+        
         if (!rePass.test(password)) {
             return next(errorHandler(400, "Password must contain at least one digit, one lowercase, one uppercase, and one special character"))
         }
@@ -39,54 +33,60 @@ export const register = async(req, res, next) => {
         } else if (isAdmin) {
             return next(errorHandler(403, "Invalid admin key"))
         }
-            const hash = await bcrypt.hash(password, 10);
-            const user = await User.create({
-                userName, email, password: hash,
-                isAdmin: isAdminFlag
+        const hash = await bcrypt.hash(password, 10);
+        const user = await User.create({
+          userName, email, password: hash,
+          isAdmin: isAdminFlag
+        })
+        // cache code and send to user
+        let code = null
+        if (!user.isVerified && !user.isAdmin) {
+          const code = Math.floor(100000 + Math.random() * 900000);
+          cache.set(email, code.toString(), 3600000);
+          const sendingEmail = await sendEmail(email, {
+            subject: "Account verification",
+            message: `Your verification code is ${code}`
+          });
+          
+          if (!sendingEmail) {
+            return next(errorHandler(500, "Error sending email"))
+          }
+          return res.status(201).json({
+          message: 'User not verified. OTP sent to email for verification',
+          data: {
+            user: { ...user._doc, password: undefined },
+            code
+          }
+        })
+        }
+
+        let token = null;
+        if (isAdminFlag) {
+            token = jwt.sign({id: user._id, isAdmin: true }, ADMIN_SECRET, {
+                expiresIn: '30d'
             })
-            // cache code and send to user
-            let code = null
-            if (!user.isVerified && !user.isAdmin) {
-                const code = Math.floor(100000 + Math.random() * 900000);
-            cache.set(email, code.toString(), 3600000);
-            const sendingEmail = await sendEmail(email, {
-                subject: "Account verification",
-                message: `Your verification code is ${code}`
-            });
-            if (!sendingEmail) {
-                return next(errorHandler(500, "Error sending email"))
-            }
-            return next(
-                errorHandler(400, 'User not verified. OTP sent to email for verification')
-              );
+        }
+        
+        const { password: _, ...userData } = user._doc
+        res.status(200).json({
+            message: "User created successfully",
+            token: token ? `Bearer ${token}` : null,
+            user: userData,
+            ...(code && { code })
+          })
+        } catch (error) {
+          next(error)
+        }
+      }
 
-            }
 
-            let token = null;
-            if (isAdminFlag) {
-                token = jwt.sign({id: user._id, isAdmin: true }, ADMIN_SECRET, {
-                    expiresIn: '30d'
-                })
-            }
-           
-            const { password: _, ...userData } = user._doc
-            res.status(200).json({
-                message: "User created successfully",
-                token: token ? `Bearer ${token}` : null,
-                user: userData,
-                ...(code && { code })
-            })
-    } catch (error) {
-        next(error)
-    }
-}
-
-export async function resendUserOtp(req, res) {
+export async function resendUserOtp(req, res, next) {
     try {
       const { email } = req.body;
       const user = await User.findOne({
         email: email,
       });
+
       if (!user) {
         return next(errorHandler("User not found"));
       }
@@ -152,7 +152,6 @@ export const userLogin = async(req, res, next) => {
         }
         
             if (!userCred.isVerified) {
-              // send otp
               const code = Math.floor(100000 + Math.random() * 900000);
               cache.set(email, code.toString(), 3600000);
               const sendEmail = await sendEmail(email, {
