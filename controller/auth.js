@@ -15,10 +15,16 @@ export const register = async(req, res, next) => {
         if (!userName || !email || !password) {
             return next(errorHandler(400, "Please fill in all fields"));
         }
-        const existingUser = await User.findOne({email, userName});
+        const existingUser = await User.findOne({email});
         if (existingUser) {
             return next(errorHandler(400, "Email or Password already exists"));
         }
+        
+        const existingUserName = await User.findOne({ userName });
+        if (existingUserName) {
+          return next(errorHandler(400, "Username already exists"));
+        }
+        
         if (password.length < 8) {
             return next(errorHandler(400, "Password must be at least 8 characters"))
         }
