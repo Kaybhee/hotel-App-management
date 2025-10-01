@@ -1,21 +1,9 @@
-import nodemailer from "nodemailer";
 import dotenv from 'dotenv';
 dotenv.config();
-// import fs from "fs";
-// import path from "path";
-// import handlebars from "handlebars";
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(process.env.SENDGRID_API);
 
 export const sendEmail = async(to, data) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-// console.log("EMAIL_USER:",process.env.EMAIL_HOST, "EMAIL_PORT:", process.env.EMAIL_PASSWORD)
   const htmlTemplate = `
   <!DOCTYPE html>
   <html lang="en">
@@ -45,19 +33,21 @@ export const sendEmail = async(to, data) => {
     </body>
   </html>
   `;
-
-  const mailOptions = {
+  const msg = {
+    to: to, 
     from: process.env.EMAIL_USER,
-    to: to,
     subject: data.subject || "Hotels Packard Notification",
     html: htmlTemplate,
-  };
+}
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
+try {
+  await sgMail.send(msg);
+  return true;
+} catch (err) {
+  console.error("Sendgrid error:", err);
+  if (err.response) {
+    console.error("Sendgrid res error: ", err.response.body);
   }
+  return false;
+}
 }
