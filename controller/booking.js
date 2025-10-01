@@ -28,12 +28,12 @@ export const bookRoom = async(req, res, next) => {
         if (!room) {
             return next(errorHandler(404, 'Room not found'));
         }
-        // check for selected rooms
+
         const selectedRoom = room.roomNumbers.find((rnum) => rnum.number === roomNumber);
         if(!selectedRoom) {
             return next(errorHandler(404, 'Room number not found'));
         }
-        // check for availability
+
         const isUnavailable = selectedRoom.unavailableDates.some((date) => date >= new Date(startDate) && date <= new Date(endDate));
         if(isUnavailable) {
             return next(errorHandler(400, 'Room is not available for this dates'))
@@ -46,8 +46,6 @@ export const bookRoom = async(req, res, next) => {
             bookingDate: new Date()
         })
 
-        // To send an email for confirmation
-        // const user = req.user;
         const user = await User.findById(userId)
         const emailSent = await sendEmail(user.email, {
             subject: 'Booking confirmation',
