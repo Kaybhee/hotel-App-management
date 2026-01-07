@@ -1,7 +1,11 @@
 import dotenv from 'dotenv';
+import { MailtrapClient } from 'mailtrap';
 dotenv.config();
-import sgMail from '@sendgrid/mail';
+// import sgMail from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API);
+const client = new MailtrapClient({
+  token : process.env.MAILTRAP_API
+})
 
 export const sendEmail = async(to, data) => {
   const htmlTemplate = `
@@ -41,13 +45,13 @@ export const sendEmail = async(to, data) => {
 }
 
 try {
-  await sgMail.send(msg);
+  await client.send(msg);
   console.log("Email sent successfully!");
   return true;
 } catch (err) {
-  console.error("Sendgrid error:", err);
+  console.error("Mailtrap error:", err);
   if (err.response) {
-    console.error("Sendgrid res error: ", err.response.body);
+    console.error("Mailtrap response error: ", err.response.body);
   }
   return false;
 }
