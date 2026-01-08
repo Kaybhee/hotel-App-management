@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { MailtrapClient } from 'mailtrap';
 dotenv.config();
 // import sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API);
+// sgMail.setApiKey(process.env.SENDGRID_API);
 const client = new MailtrapClient({
   token : process.env.MAILTRAP_API
 })
@@ -30,8 +30,7 @@ export const sendEmail = async(to, data) => {
           <a
             style="text-decoration: none"
             href="mailto:enquiry@example.com"
-            >enquiry@example.com</a
-          >
+            >enquiry@example.com</a>
         </p>
       </div>
     </body>
