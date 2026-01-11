@@ -92,7 +92,7 @@ export async function resendUserLink(req, res, next) {
       // cache.set(email, code.toString(), 3600000);
       const token = jwt.sign( {email : user}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
       
-      const verification_link = `${process.env.APP_URL}/verify-email?token=${token}`;
+      const verification_link = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}`;
       const sendingEmail = await sendEmail(user.email, {
         subject: "Account verification",
         message: `<p> Please verify your email by clicking the link below: </>
@@ -122,13 +122,15 @@ export async function resendUserLink(req, res, next) {
 
   export const verifyUserRegistration = async(req, res, next) => {
     try {
-      const { token } = req.body;
+      const { token } = req.query;
       // const verificationCode = cache.get(email);
 
       // if (verificationCode !== code.toString()) {
       //   return next(errorHandler(400,"Invalid verification code"));
       if (!token) 
-        {return "Verification token missing"}
+        {
+          return res.status(400).json({message: "Verification token missing"})
+        }
       
       const decoded = jwt.verify(token, process.env.VERIFICATION_SECRET)
       const user = await User.findOne({email : decoded.email })
