@@ -49,10 +49,10 @@ export const register = async(req, res, next) => {
           const sendingEmail = await sendEmail(user.email, {
             subject: "Account verification",
             message: `<p> Please verify your email by clicking the link below: </p>
-            <a href=${verification_link}> Verification Email</a> 
-            <p> style="display:inline-block;padding:12px 20px;
+            <a href=${verification_link} 
+            style="display:inline-block;padding:12px 20px;
    background:#2563eb;color:white;text-decoration:none;
-   border-radius:6px; </p>`
+   border-radius:6px;"> Verify Email </a>`
           });
           
           if (!sendingEmail) {
