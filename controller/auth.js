@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
 import { JWT_SECRET, ADMIN_SECRET } from '../app.js'
 import { sendEmail } from '../services/mail.js';
-import { token } from 'morgan';
 
 const cache = new NodeCache()
 
@@ -65,16 +64,15 @@ export const register = async(req, res, next) => {
           message: 'Account created. Check your email for verification',
         })
         }
-
-        if (isAdminFlag) {
-            token = jwt.sign({id: user._id, isAdmin: true }, ADMIN_SECRET, {
-                expiresIn: '30d'
-            })
-        }
+        
+        const adminToken = jwt.sign({id: user._id, isAdmin: true }, ADMIN_SECRET, {
+            expiresIn: '30d'
+        })
+    
         
         res.status(200).json({
             message: "This user has all Admin privilege",
-            adminToken : token
+            adminToken : adminToken
           })
         } catch (error) {
           next(error)
