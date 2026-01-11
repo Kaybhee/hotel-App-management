@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import errorHandler from '../middlewares/errors/errHandling.js'
 import { JWT_SECRET, ADMIN_SECRET } from '../app.js'
 import { sendEmail } from '../services/mail.js';
+import { token } from 'morgan';
 
 const cache = new NodeCache()
 
@@ -15,7 +16,7 @@ export const register = async(req, res, next) => {
         if (!userName || !email || !password) {
             return next(errorHandler(400, "Please fill in all fields"));
         }
-        const existingUser = await User.findOne({$or: [{email : email}, {username : userName}]});
+        const existingUser = await User.findOne({$or: [{ email : email }, { userName }]});
         if (existingUser) {
             return next(errorHandler(400, "Email or username already exists"));
         }
@@ -37,7 +38,8 @@ export const register = async(req, res, next) => {
         const hash = await bcrypt.hash(password, 10);
         const user = await User.create({
           userName, email, password: hash,
-          isAdmin: isAdminFlag
+          isAdmin: isAdminFlag,
+          isVerified : isAdminFlag
         })
         // cache code and send to user
         if (!user.isVerified && !user.isAdmin) {
@@ -45,14 +47,15 @@ export const register = async(req, res, next) => {
           // cache.set(email, code.toString(), 3600000);
           const token = jwt.sign( {email : user.email}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
 
-          const verification_link = `${process.env.APP_URL}/api/auth/verify-email?token=${token}`;
+          const verification_link = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}`;
           const sendingEmail = await sendEmail(user.email, {
             subject: "Account verification",
             message: `<p> Please verify your email by clicking the link below: </p>
             <a href=${verification_link} 
             style="display:inline-block;padding:12px 20px;
    background:#2563eb;color:white;text-decoration:none;
-   border-radius:6px;"> Verify Email </a>`
+   border-radius:6px;"> Verify Email </a>
+   <p> This link expires in 10 minutes </p>`
           });
           
           if (!sendingEmail) {
@@ -70,7 +73,8 @@ export const register = async(req, res, next) => {
         }
         
         res.status(200).json({
-            message: "This user has all Admin privilege"
+            message: "This user has all Admin privilege",
+            adminToken : token
           })
         } catch (error) {
           next(error)
@@ -88,9 +92,13 @@ export async function resendUserLink(req, res, next) {
       if (!user) {
         return next(errorHandler("User not found"));
       }
+
+      if (user.isVerified){
+        return res.status(200).json({ message: "User already verified"})
+      }
       // const code = Math.floor(100000 + Math.random() * 900000);
       // cache.set(email, code.toString(), 3600000);
-      const token = jwt.sign( {email : user}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
+      const token = jwt.sign( {email : user.email}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
       
       const verification_link = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}`;
       const sendingEmail = await sendEmail(user.email, {
