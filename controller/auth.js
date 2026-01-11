@@ -15,14 +15,9 @@ export const register = async(req, res, next) => {
         if (!userName || !email || !password) {
             return next(errorHandler(400, "Please fill in all fields"));
         }
-        const existingUser = await User.findOne({email});
+        const existingUser = await User.findOne({$or: [{email : email}, {username : userName}]});
         if (existingUser) {
-            return next(errorHandler(400, "Email or Password already exists"));
-        }
-        
-        const existingUserName = await User.findOne({ userName });
-        if (existingUserName) {
-          return next(errorHandler(400, "Username already exists"));
+            return next(errorHandler(400, "Email or username already exists"));
         }
         
         if (password.length < 8) {
@@ -45,40 +40,35 @@ export const register = async(req, res, next) => {
           isAdmin: isAdminFlag
         })
         // cache code and send to user
-        let code = null
         if (!user.isVerified && !user.isAdmin) {
-          const code = Math.floor(100000 + Math.random() * 900000);
-          cache.set(email, code.toString(), 3600000);
-          const sendingEmail = await sendEmail(email, {
+          // const code = Math.floor(100000 + Math.random() * 900000);
+          // cache.set(email, code.toString(), 3600000);
+          const token = jwt.sign( {email : user.email}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
+
+          const verification_link = `${process.env.APP_URL}/verify-email?token=${token}`;
+          const sendingEmail = await sendEmail(user.email, {
             subject: "Account verification",
-            message: `Your verification code is ${code}`
+            message: `<p> Please verify your email by clicking the link below: </>
+            <button style="color: white; background-color: blue; height=50px; width:100px"><a href=${verification_link}> Verification Email</a> 
+            <p>This verification link expires in 10 minutes </p>`
           });
           
           if (!sendingEmail) {
             return next(errorHandler(500, "Error sending email"))
           }
           return res.status(201).json({
-          message: 'User not verified. OTP sent to email for verification',
-          data: {
-            user: { ...user._doc, password: undefined },
-            code
-          }
+          message: 'Account created. Check your email for verification',
         })
         }
 
-        let token = null;
         if (isAdminFlag) {
             token = jwt.sign({id: user._id, isAdmin: true }, ADMIN_SECRET, {
                 expiresIn: '30d'
             })
         }
         
-        const { password: _, ...userData } = user._doc
         res.status(200).json({
-            message: "User created successfully",
-            token: token ? `Bearer ${token}` : null,
-            user: userData,
-            ...(code && { code })
+            message: "This user has all Admin privilege"
           })
         } catch (error) {
           next(error)
@@ -86,7 +76,7 @@ export const register = async(req, res, next) => {
       }
 
 
-export async function resendUserOtp(req, res, next) {
+export async function resendUserLink(req, res, next) {
     try {
       const { email } = req.body;
       const user = await User.findOne({
@@ -96,12 +86,22 @@ export async function resendUserOtp(req, res, next) {
       if (!user) {
         return next(errorHandler("User not found"));
       }
-      const code = Math.floor(100000 + Math.random() * 900000);
-      cache.set(email, code.toString(), 3600000);
-      const sendingEmail = await sendEmail(email, {
-        subject: "Account Verification",
-        message: `Your verification code is ${code}`,
+      // const code = Math.floor(100000 + Math.random() * 900000);
+      // cache.set(email, code.toString(), 3600000);
+      const token = jwt.sign( {email : user}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
+      
+      const verification_link = `${process.env.APP_URL}/verify-email?token=${token}`;
+      const sendingEmail = await sendEmail(user.email, {
+        subject: "Account verification",
+        message: `<p> Please verify your email by clicking the link below: </>
+        <button style="color: blue; height=50px; width:100px"><a href=${verification_link}> Verification Email</a> 
+        <p>This verification link expires in 10 minutes </p>`
       });
+          
+      // const sendingEmail = await sendEmail(email, {
+      //   subject: "Account Verification",
+      //   message: `Your verification code is ${code}`,
+      // });
       if (!sendingEmail) {
         return res
           .status(500)
@@ -109,8 +109,8 @@ export async function resendUserOtp(req, res, next) {
       }
       return res.status(200).json({
         status: true,
-        message: "OTP sent",
-        data: { code },
+        message: "Verification link sent",
+        // data: { code },
       });
     } catch (err) {
       next(err)
@@ -120,31 +120,29 @@ export async function resendUserOtp(req, res, next) {
 
   export const verifyUserRegistration = async(req, res, next) => {
     try {
-      const { email, code } = req.body;
-      const verificationCode = cache.get(email);
-      if (verificationCode !== code.toString()) {
-        return next(errorHandler(400,"Invalid verification code"));
-      } else {
-        const user = await User.findOne({ email });
-        if (!user) {
-          return next(errorHandler("User not found"));
-        } else {
-          user.isVerified = true;
-          const savedUser = await user.save();
-          const genToken = jwt.sign({id: savedUser._id}, JWT_SECRET, {
-            expiresIn: '1h'
-        })
-        if (!genToken) {
-            return next(errorHandler(400, "Token not generated")) 
-        }
-        return res.status(200).json({message: "User verified", token: `Bearer ${genToken}`})
+      const { token } = req.body;
+      // const verificationCode = cache.get(email);
+
+      // if (verificationCode !== code.toString()) {
+      //   return next(errorHandler(400,"Invalid verification code"));
+      if (!token) 
+        {return "Verification token missing"}
+      
+      const decoded = jwt.verify(token, process.env.VERIFICATION_SECRET)
+      const user = await User.findOne({email : decoded.email })
+      if (!user) 
+        return res.status(404).json({message: "User not found"})
+      if (user.isVerified)
+        return res.status(200).json({message:"User already verified" })
+      user.isVerified = true
+      await user.save()
+      return res.status(200).json({ message: "User verified successfully"})
     }
- }
- } catch (err) {
+    catch (err) {
       next(err)
     }
   }
-  
+
 export const userLogin = async(req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -158,16 +156,21 @@ export const userLogin = async(req, res, next) => {
         }
         
             if (!userCred.isVerified) {
-              const code = Math.floor(100000 + Math.random() * 900000);
-              cache.set(email, code.toString(), 3600000);
-              const sendEmail = await sendEmail(email, {
-                subject: "Account Verification",
-                message: `Your verification code is ${code}`,
+              // const code = Math.floor(100000 + Math.random() * 900000);
+              // cache.set(email, code.toString(), 3600000);
+              const token = jwt.sign( {email : userCred}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
+      
+              const verification_link = `${process.env.APP_URL}/verify-email?token=${token}`;
+              const sendingEmail = await sendEmail(user.email, {
+                subject: "Account verification",
+                message: `<p> Please verify your email by clicking the link below: </>
+                <button style="color: blue; height=50px; width:100px"><a href=${verification_link}> Verification Email</a> 
+                <p>This verification link expires in 10 minutes </p>`
               });
-              if (!sendEmail) {
+              if (!sendingEmail) {
                 return next(errorHandler("Error sending email"));
               }
-              return next(errorHandler("User not verified. OTP sent to email for verification"));
+              return next(errorHandler("Verification email sent"));
             } else {
                 const genToken = jwt.sign({id: userCred._id}, JWT_SECRET, {
                     expiresIn: '1h'
