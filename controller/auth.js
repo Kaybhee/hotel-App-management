@@ -45,12 +45,14 @@ export const register = async(req, res, next) => {
           // cache.set(email, code.toString(), 3600000);
           const token = jwt.sign( {email : user.email}, process.env.VERIFICATION_SECRET, { expiresIn : "10m"})
 
-          const verification_link = `${process.env.APP_URL}/verify-email?token=${token}`;
+          const verification_link = `${process.env.APP_URL}/api/auth/verify-email?token=${token}`;
           const sendingEmail = await sendEmail(user.email, {
             subject: "Account verification",
-            message: `<p> Please verify your email by clicking the link below: </>
-            <button style="color: white; background-color: blue; height=50px; width:100px"><a href=${verification_link}> Verification Email</a> 
-            <p>This verification link expires in 10 minutes </p>`
+            message: `<p> Please verify your email by clicking the link below: </p>
+            <a href=${verification_link}> Verification Email</a> 
+            <p> style="display:inline-block;padding:12px 20px;
+   background:#2563eb;color:white;text-decoration:none;
+   border-radius:6px; </p>`
           });
           
           if (!sendingEmail) {
