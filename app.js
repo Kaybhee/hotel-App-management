@@ -10,7 +10,7 @@ import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
 import './jobs/cleanDates.js';
 import cors from 'cors';
-import { limiter, rateLimiter } from './middlewares/rateLimit/rateLimiter.js'
+import { limiter } from './middlewares/rateLimit/rateLimiter.js'
 
 dotenv.config()
 export const MONGODB_URI = process.env.MONGODB_URI
