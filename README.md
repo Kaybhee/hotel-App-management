@@ -1,6 +1,6 @@
 # Hotel-App-Management
 
-A comprehensive Node.js API for hotel and room management, user registration with OTP email verification, and reservation history. This project uses Express, MongoDB, Node Cron for scheduled tasks, and features robust authentication and role-based access.
+A comprehensive Node.js API for hotel and room management, user registration with email verification, and reservation history. This project uses Express, MongoDB, Node Cron for scheduled tasks, rate limiters for preventing spam emails and features robust authentication and role-based access.
 
 ---
 
@@ -11,7 +11,7 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 - [Models](#models)
 - [Getting Started](#getting-started)
 - [Step-by-Step Usage](#step-by-step-usage)
-  - [1. User Signup & OTP Verification](#1-user-signup--otp-verification)
+  - [1. User Signup & Link Verification](#1-user-signup--link-verification)
   - [2. User Login](#2-user-login)
   - [3. Hotel & Room Management (Admin)](#3-hotel--room-management-admin)
   - [4. Room Booking (User)](#4-room-booking-user)
@@ -26,13 +26,13 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 
 ## Features
 
-- User registration with OTP email verification
+- User registration with email verification
 - JWT authentication
 - Admin and user roles
 - Hotel and room CRUD operations (admin only)
 - Room booking with date availability checks
 - Reservation history for users
-- Email notifications for OTP and bookings
+- Email notifications for links and bookings
 - Automated cleanup of expired room dates using Node Cron
 - Swagger API documentation
 
@@ -42,10 +42,10 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 
 - Node.js, Express.js
 - MongoDB (Mongoose)
-- Nodemailer (for emails)
+- BrevoAPI (Thirdparty app for emails)
 - Node Cron (for scheduled jobs)
 - Swagger (API docs)
-- dotenv, morgan, cors
+- dotenv, morgan, cors, rate-limiter
 
 ---
 
@@ -137,13 +137,13 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 - **Description:** Provide token to activate your account or skip this step if the email sent for verification has been clicked ON.
 
 **Resend URL:**
-- **Endpoint:**`GET /api/v1/auth/resend-link`
+- **Endpoint:** `GET /api/v1/auth/resend-link`
 - **Body:**
     ```sh
     {
     "email": "your@email.com"
     }
-- ** Rate Limiter:** The express-rate-limiter is used to prevent spam resending of emails. The rate limiter is set to 3 max verification emails per every 20 minutes for any user.
+- **Rate Limiter:** The express-rate-limiter is used to prevent spam resending of emails. The rate limiter is set to 3 max verification emails per every 20 minutes for any user.
 - **Description:** The verification link expires in 10 minutes
 ---
 ### 2. User Login
