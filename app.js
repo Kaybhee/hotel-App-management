@@ -10,7 +10,7 @@ import morgan from 'morgan'
 import { setupSwaggerDocs } from './swagger.js';
 import './jobs/cleanDates.js';
 import cors from 'cors';
-import { rateLimiter } from './middlewares/rateLimit/rateLimiter.js'
+import { limiter, rateLimiter } from './middlewares/rateLimit/rateLimiter.js'
 
 dotenv.config()
 export const MONGODB_URI = process.env.MONGODB_URI
@@ -36,7 +36,7 @@ app.use(cors('*'));
 
 // routes 
 app.use('/api/v1/hotels', hotelRoutes)
-app.use('/api/v1/auth', rateLimiter, authRoutes)
+app.use('/api/v1/auth', limiter, authRoutes)
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/room', roomRoutes)
 // app.use('/api/v1/booking', bookingRoutes)
