@@ -74,7 +74,7 @@ export const register = async(req, res, next) => {
         
         res.status(200).json({
             message: "This user has all Admin privilege",
-            adminToken : adminToken
+            adminToken : `Bearer ${adminToken}`
           })
         } catch (error) {
           next(error)
