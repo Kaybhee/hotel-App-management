@@ -10,12 +10,7 @@ servers:
   - url: http://localhost:5000/api/v1
     description: Local development server
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: Bearer
-      bearerFormat: JWT
+
 
 paths:
   /auth/create-user:
@@ -451,6 +446,13 @@ paths:
       tags: [Users]
       security:
         - bearerAuth: []
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
+
       responses:
         '200':
           description: Users retrieved
