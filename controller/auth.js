@@ -54,6 +54,8 @@ export const register = async(req, res, next) => {
             style="display:inline-block;padding:12px 20px;
    background:#2563eb;color:white;text-decoration:none;
    border-radius:6px;"> Verify Email </a>
+   <p> If the link is not working, copy below link into your web browser and activate the account.<br>
+   ${verification_link} 
    <p> This link expires in 10 minutes </p>`
           });
           
@@ -129,10 +131,6 @@ export async function resendUserLink(req, res, next) {
   export const verifyUserRegistration = async(req, res, next) => {
     try {
       const { token } = req.query;
-      // const verificationCode = cache.get(email);
-
-      // if (verificationCode !== code.toString()) {
-      //   return next(errorHandler(400,"Invalid verification code"));
       if (!token) 
         {
           return res.status(400).json({message: "Verification token missing"})
