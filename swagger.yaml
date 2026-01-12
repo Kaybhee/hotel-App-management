@@ -112,6 +112,8 @@ paths:
     post:
       summary: Admin login
       tags: [Auth]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
