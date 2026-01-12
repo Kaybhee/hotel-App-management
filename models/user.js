@@ -15,19 +15,19 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, "Please provide a password"]
       },
-        isAdmin: {
-          type: Boolean,
-          default: false
-        },
-        isVerified: {
-          type: Boolean,
-          default: false
-        },
-        isDelete: {
-          type: Boolean,
-          default: false
-        }
-      }, {timestamps: true}
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    isDelete: {
+      type: Boolean,
+      default: false
+    }
+    }, {timestamps: true}
 )
 const User = mongoose.model("User", userSchema);
 export default User;
