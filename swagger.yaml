@@ -10,6 +10,12 @@ servers:
   - url: http://localhost:5000/api/v1
     description: Local development server
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
 
 paths:
   /auth/create-user:
@@ -445,15 +451,13 @@ paths:
       tags: [Users]
       security:
         - bearerAuth: []
-      parameters:
-        - in: path
-          name: token
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Users retrieved
+        '401':
+          description: Unauthorized (missing or invalid token)
+        '403':
+          description: Forbidden (Not an admin)
 
   /user/{userId}:
     get:
