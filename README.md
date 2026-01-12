@@ -57,8 +57,7 @@ A comprehensive Node.js API for hotel and room management, user registration wit
 - `password`: String (hashed)
 - `role`: String (`user` or `admin`)
 - `isVerified`: Boolean
-- `otp`: String (for email verification)
-- `otpExpires`: Date
+- `isDelete`: Boolean
 
 ### Hotel Model
 - `name`: String
@@ -92,20 +91,30 @@ A comprehensive Node.js API for hotel and room management, user registration wit
     ```sh 
     npm install
 3. **Set up environment variables:**
+   -- Brevo API [Click Here](https://app.brevo.com/settings/keys/api) is used for our mailing system due to the deployment on render not accepting sending free emails to available ports.
     * Create a .env file with:
     ```sh 
     MONGODB_URI=your_mongodb_uri
     JWT_SECRET=your_jwt_secret
     ADMIN_SECRET=your_admin_secret
     EMAIL_USER=your_email
-    EMAIL_PASS=your_email_password
-4. **Start the server:**
+    BREVO_API=yourapi
+    APP_URL=oururl
+    VERIFICATION_SECRET=yourverificationsecret
+
+5. **During Development**
+   ```sh
+   npm install nodemon
+   run the starting file using nodemon to watch file changes
+    
+5. **Start the server:**
     ```sh 
     npm start
+    
 
 ## Step-by-Step Usage
 
-### 1. User Signup & OTP Verification
+### 1. User Signup & Link Verification
 
 **Signup:**  
 - **Endpoint:** `POST /api/v1/auth/create-user`
@@ -116,26 +125,26 @@ A comprehensive Node.js API for hotel and room management, user registration wit
     "email": "your@email.com",
     "password": "yourPassword"
   }
-- **Description:** An OTP is sent to your email for verification.
+- **Description:** A verification link is sent to your email for verification and it expires in 10 minutes.
 
-**Verify OTP:**
-- **Endpoint:** `PATCH /api/v1/auth/verify-user-registration`
+**Verify LINK:**
+- **Endpoint:** `GET /api/v1/auth/verify-email`
 - **Body:**
     ```sh
     {
-    "email": "your@email.com",
-    "otp": "123456"
+    "token" : provide token
     }
-- **Description:** Provide your email and the OTP code to activate your account.
+- **Description:** Provide token to activate your account or skip this step if the email sent for verification has been clicked ON.
 
-**Resend OTP:**
-- **Endpoint:**`POST /api/v1/auth/resend-user-otp`
+**Resend URL:**
+- **Endpoint:**`GET /api/v1/auth/resend-link`
 - **Body:**
     ```sh
     {
     "email": "your@email.com"
     }
-- **Description:** Use if the OTP expires or is lost.
+- ** Rate Limiter:** The express-rate-limiter is used to prevent spam resending of emails. The rate limiter is set to 3 max verification emails per every 20 minutes for any user.
+- **Description:** The verification link expires in 10 minutes
 ---
 ### 2. User Login
 **Login:**
@@ -259,10 +268,10 @@ Room booking logic, email confirmation (controller/booking.js)
 Go to https://hotel-app-management.onrender.com/api-docs
 
 2. **Register a User:**<br>
-Use `/auth/create-user` and check your email for OTP.
+Use `/auth/create-user` and check your email for link.
 
 3. **Verify Account:**<br>
-Use `/auth/verify-user-registration` with your email and OTP.
+The `/auth/verify-email` sends a verification link to your email.
 
 4. **Login:**<br>
 Use `/auth/login` to get your JWT token.
