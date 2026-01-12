@@ -447,7 +447,7 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: userId
+          name: token
           required: true
           schema:
             type: string
