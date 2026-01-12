@@ -103,8 +103,13 @@ export async function resendUserLink(req, res, next) {
       const verification_link = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}`;
       const sendingEmail = await sendEmail(user.email, {
         subject: "Account verification",
-        message: `<p> Please verify your email by clicking the link below: </>
-        <button style="color: blue; height=50px; width:100px"><a href=${verification_link}> Verification Email</a> 
+        message: `<p> Please verify your email by clicking the link below: </p>
+        <a href=${verification_link}
+        style="display:inline-block;padding:12px 20px;
+        background:#2563eb;color:white;text-decoration:none;
+        border-radius:6px;"> Verify Email </a>
+        <p> If the link is not working, copy below link into your web browser and activate the account.<br>
+        ${verification_link} 
         <p>This verification link expires in 10 minutes </p>`
       });
           
