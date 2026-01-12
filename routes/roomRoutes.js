@@ -15,7 +15,7 @@ roomRoutes.post('/create-room/:hotelId', adminOnly, createRoom);
 roomRoutes.get('/', getRooms);
 roomRoutes.get('/:roomId', getRoom);
 roomRoutes.put('/availability/:roomNumberId', updateRoomAvailability)
-roomRoutes.post('/book-room', bookRoom)
+roomRoutes.post('/book-room', protectAuth, bookRoom)
 roomRoutes.put('/update-room/:roomId', adminOnly, updateRoom)
 roomRoutes.delete('/delete-room/:roomId/:hotelId', adminOnly, delRoom)
 
