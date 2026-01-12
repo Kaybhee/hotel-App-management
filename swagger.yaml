@@ -42,9 +42,9 @@ paths:
         '201':
           description: User registered successfully
 
-  /auth/resend-user-otp:
+  /auth/resend-link:
     post:
-      summary: Resend OTP to user's email
+      summary: Resend Verification link to user's email
       tags: [Auth]
       requestBody:
         required: true
@@ -62,28 +62,22 @@ paths:
         '200':
           description: OTP resent successfully
 
-  /auth/verify-user-registration:
-    patch:
-      summary: Verify user registration with OTP
+  /auth/verify-email:
+    get:
+      summary: Verify user email with token
       tags: [Auth]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - code
-              properties:
-                email:
-                  type: string
-                  format: email
-                code:
-                  type: string
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Verification token sent to user's email
       responses:
         '200':
-          description: User verified successfully
+          description: Email verified successfully
+        '400':
+          description: Invalid or expired token
 
   /auth/login:
     post:
