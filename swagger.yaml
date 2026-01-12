@@ -134,6 +134,12 @@ paths:
       tags: [Hotels]
       security:
         - bearerAuth: []
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
       requestBody:
         required: true
         content:
@@ -236,6 +242,12 @@ paths:
           required: true
           schema:
             type: string
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
       responses:
         '200':
           description: Hotel deleted
@@ -266,6 +278,12 @@ paths:
           required: true
           schema:
             type: string
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
       requestBody:
         required: true
         content:
@@ -400,17 +418,12 @@ paths:
       tags: [Room]
       security:
         - bearerAuth: []
-      parameters:
-        - in: path
-          name: roomId
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: hotelId
-          required: true
-          schema:
-            type: string
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
       responses:
         '200':
           description: Room deleted
@@ -511,19 +524,19 @@ paths:
       tags: [Users]
       security:
         - bearerAuth: []
+      components:
+        securitySchemes:
+          bearerAuth:
+            type: http
+            scheme: Bearer
+            bearerFormat: JWT
       parameters:
         - in: path
           name: userId
           required: true
           schema:
             type: string
+        
       responses:
         '200':
           description: User deleted
-
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
