@@ -47,7 +47,6 @@ export const sendEmail = async (to, data) => {
       }
     );
 
-    console.log(process.env.BREVO_API)
     console.log("Email sent successfully:", response.data);
     return true;
   } catch (err) {
